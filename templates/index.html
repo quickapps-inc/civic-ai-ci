@@ -3,52 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CIVIC-AI CI — Orientation administrative</title>
+  <meta name="description" content="CIVIC-AI CI — votre guide intelligent des démarches administratives en Côte d'Ivoire. Décrivez votre situation et retrouvez la démarche correspondante à partir de sources vérifiables." />
+  <title>CIVIC-AI CI — Votre guide des démarches administratives en Côte d'Ivoire</title>
   <link rel="stylesheet" href="/static/css/style.css" />
 </head>
 <body>
+  <a class="skip-link" href="#recherche">Aller à la recherche</a>
+
   <header class="site-header">
     <div class="container">
+      <p class="header-kicker">SPRINT DIGITAL 2026 — Accès à l'information et orientation des usagers · Prototype</p>
       <h1>CIVIC-AI CI</h1>
-      <p class="tagline">Exprimez votre besoin administratif en langage simple : nous identifions la démarche correspondante, sans jamais inventer d'information officielle.</p>
-      <p class="principle">Principe : <strong>UNKNOWN &gt; FAUX</strong> — une information non vérifiée reste affichée comme non vérifiée.</p>
+      <p class="value-prop">Votre guide intelligent des démarches administratives en Côte d'Ivoire</p>
+      <p class="header-sub">Expliquez simplement ce que vous souhaitez faire. CIVIC-AI vous aide à identifier la démarche correspondante et à retrouver les informations utiles issues de sources vérifiables.</p>
+      <p class="trust-note"><span class="trust-icon" aria-hidden="true">🛡</span> Lorsque nous ne pouvons pas vérifier une information, nous vous le signalons plutôt que de l'inventer.</p>
     </div>
   </header>
 
   <main class="container">
-    <section class="search-card" aria-label="Recherche de démarche">
-      <label for="query">Votre besoin administratif</label>
+    <section class="search-card" aria-labelledby="search-title" id="recherche">
+      <h2 id="search-title"><label for="query">Que souhaitez-vous faire ?</label></h2>
+      <p class="search-hint">Ou décrivez simplement votre situation avec vos propres mots.</p>
       <div class="search-row">
-        <input id="query" type="text" maxlength="500" placeholder="Ex : J'ai perdu ma CNI" autocomplete="off" />
-        <button id="search-btn" type="button">Rechercher</button>
+        <input id="query" name="query" type="text" maxlength="500" placeholder="Ex. : J'ai perdu ma CNI" autocomplete="off" aria-describedby="search-hint examples-label" />
+        <button id="search-btn" type="button">Trouver ma démarche</button>
       </div>
+      <p id="search-hint" class="visually-hidden">Écrivez par exemple : J'ai perdu ma CNI. Puis activez le bouton Trouver ma démarche.</p>
       <div class="examples">
-        <span>Exemples :</span>
-        <button type="button" class="example" data-query="J'ai perdu ma CNI">J'ai perdu ma CNI</button>
-        <button type="button" class="example" data-query="Je veux renouveler ma CNI">Je veux renouveler ma CNI</button>
-        <button type="button" class="example" data-query="Je veux ma première CNI">Je veux ma première CNI</button>
-        <button type="button" class="example" data-query="J'ai perdu mon extrait de naissance">J'ai perdu mon extrait de naissance</button>
-        <button type="button" class="example" data-query="Je veux obtenir un passeport">Je veux obtenir un passeport</button>
-        <button type="button" class="example" data-query="J'ai besoin d'un casier judiciaire">J'ai besoin d'un casier judiciaire</button>
+        <span id="examples-label">Essayez par exemple :</span>
+        <ul class="examples-list" aria-label="Exemples de recherches">
+          <li><button type="button" class="example" data-query="J'ai perdu ma CNI">J'ai perdu ma CNI</button></li>
+          <li><button type="button" class="example" data-query="Je veux renouveler ma CNI">Je veux renouveler ma CNI</button></li>
+          <li><button type="button" class="example" data-query="Je veux ma première CNI">Je veux ma première CNI</button></li>
+          <li><button type="button" class="example" data-query="J'ai perdu mon extrait de naissance">J'ai perdu mon extrait de naissance</button></li>
+          <li><button type="button" class="example" data-query="Je veux obtenir un passeport">Je veux obtenir un passeport</button></li>
+          <li><button type="button" class="example" data-query="J'ai besoin d'un casier judiciaire">J'ai besoin d'un casier judiciaire</button></li>
+        </ul>
       </div>
+      <p id="loading" class="loading" role="status" hidden>Recherche en cours…</p>
       <p id="error" class="error" role="alert" hidden></p>
     </section>
 
-    <section id="result" class="result-card" aria-live="polite" hidden>
-      <h2 id="result-title"></h2>
-      <p><span id="badge" class="badge"></span></p>
-      <p id="result-message"></p>
-      <dl id="result-details" class="details"></dl>
-      <div id="result-sources-block">
-        <h3>Sources officielles</h3>
-        <div id="result-sources"></div>
-      </div>
+    <section id="intro" class="intro-card" aria-label="Comment ça marche">
+      <h2>Comment ça marche ?</h2>
+      <ol class="steps">
+        <li><strong>1. Décrivez</strong> votre situation avec vos propres mots.</li>
+        <li><strong>2. Vérifiez</strong> la démarche identifiée et votre situation précise.</li>
+        <li><strong>3. Préparez</strong> vos documents, puis consultez la source officielle indiquée.</li>
+      </ol>
+    </section>
+
+    <section id="result" class="result-card" aria-live="polite" aria-busy="false" hidden>
+      <div id="result-body"></div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="container">
-      <p>MVP CIVIC-MVP-001 — moteur déterministe local, aucune IA générative, aucune donnée officielle inventée.</p>
+      <p><strong>CIVIC-AI CI</strong> — Prototype d'orientation vers les démarches administratives en Côte d'Ivoire.</p>
+      <p>Les informations administratives peuvent évoluer. Consultez toujours la source officielle indiquée.</p>
+      <p class="footer-note">Prototype de démonstration, sans affiliation officielle avec l'État ivoirien, l'ONECI, la SNEDAI ou une autre administration.</p>
     </div>
   </footer>
 

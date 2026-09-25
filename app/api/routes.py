@@ -84,11 +84,12 @@ def api_search(payload: SearchRequest) -> SearchResponse:
             needs_clarification=True,
             verification_status=procedure.verification_status,
             message=(
-                f"Démarche identifiée : {procedure.name}, mais votre situation "
-                f"ne permet pas de déterminer la variante ({variant_names}). "
+                f"Nous avons identifié la démarche {procedure.name}, "
+                "mais nous avons besoin de préciser votre situation "
+                f"({variant_names}). "
                 "Précisez par exemple : « première demande », « renouvellement » "
-                "ou « perte / duplicata ». Aucune variante n'est choisie "
-                "arbitrairement (principe UNKNOWN > FAUX)."
+                "ou « perte / duplicata ». Aucune situation n'est choisie "
+                "à votre place."
             ),
         )
     effective_status = variant.verification_status if variant else procedure.verification_status
@@ -98,8 +99,8 @@ def api_search(payload: SearchRequest) -> SearchResponse:
         message = (
             f"Démarche identifiée : {procedure.name}. "
             "Les informations détaillées (documents, coût, délai, autorité) "
-            "ne sont pas encore vérifiées et restent donc non renseignées "
-            "(principe UNKNOWN > FAUX)."
+            "ne sont pas encore vérifiées et restent donc non renseignées : "
+            "nous vous le signalons plutôt que de les inventer."
         )
     else:
         message = f"Démarche identifiée : {procedure.name}."
