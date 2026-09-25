@@ -2,12 +2,25 @@
   "id": "certificat-nationalite",
   "slug": "certificat-nationalite",
   "name": "Certificat de nationalité",
-  "summary": "Fiche en cours de constitution. Les informations administratives officielles (documents requis, coût, délai, autorité compétente) ne sont pas encore vérifiées.",
-  "requirements": [],
-  "cost": null,
-  "delay": null,
-  "competent_authority": null,
-  "sources": [],
-  "verification_status": "UNVERIFIED",
-  "verified_at": null
+  "summary": "Document permettant de certifier qu'un individu est ivoirien. Les documents dépendent du fondement juridique de la nationalité : la liste du cas général (filiation) ci-dessous n'est pas universelle.",
+  "requirements": [
+    "Requête aux fins d'établissement du certificat (cas général/filiation)",
+    "Preuve du lien de filiation, notamment par extrait d'acte de naissance ou livret de famille (cas général/filiation)",
+    "Preuve de la nationalité ivoirienne du parent (cas général/filiation)"
+  ],
+  "cost": "2 500 FCFA + 500 FCFA de timbre fiscal",
+  "delay": "24 heures après dépôt des dossiers",
+  "competent_authority": "Service des casiers judiciaires et certificats de nationalité",
+  "notes": "La source précise que les documents dépendent du fondement juridique de la nationalité : la liste du cas général (filiation) ne doit pas être présentée comme universelle.",
+  "variants": [],
+  "sources": [
+    {
+      "title": "Certificat de nationalité — Service Public",
+      "organization": "Portail officiel de l'Administration ivoirienne — Service Public",
+      "url": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/573/",
+      "verified_at": "2026-09-25"
+    }
+  ],
+  "verification_status": "PARTIALLY_VERIFIED",
+  "verified_at": "2026-09-25"
 }

@@ -2,12 +2,27 @@
   "id": "passeport",
   "slug": "passeport",
   "name": "Passeport",
-  "summary": "Fiche en cours de constitution. Les informations administratives officielles (documents requis, coût, délai, autorité compétente) ne sont pas encore vérifiées.",
+  "summary": "La procédure comporte notamment : inscription/démarche préalable, paiement, rendez-vous/enrôlement, contrôle des documents, empreintes et photographie, récépissé, délivrance après validation. La liste exhaustive des pièces n'est pas encodée (non fournie dans cette mission).",
   "requirements": [],
-  "cost": null,
-  "delay": null,
-  "competent_authority": null,
-  "sources": [],
-  "verification_status": "UNVERIFIED",
-  "verified_at": null
+  "cost": "40 000 FCFA",
+  "delay": "72 heures après validation par la Police de l'Air et des Frontières",
+  "competent_authority": "SNEDAI (dispositif d'enrôlement) ; validation par la Police de l'Air et des Frontières (mentionnée par la source)",
+  "notes": "Organismes présentés avec prudence : SNEDAI pour le dispositif d'enrôlement ; validation par la Police de l'Air et des Frontières mentionnée par la source. Le délai n'est pas un simple « 72 heures » : il est conditionné à la validation par la Police de l'Air et des Frontières. Liste exhaustive des pièces non encodée.",
+  "variants": [],
+  "sources": [
+    {
+      "title": "Passeport en Côte d'Ivoire",
+      "organization": "SNEDAI",
+      "url": "https://snedai.com/passeport-en-cote-divoire/",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "title": "FAQ — monpasseport.ci",
+      "organization": "monpasseport.ci",
+      "url": "https://www.monpasseport.ci/faq",
+      "verified_at": "2026-09-25"
+    }
+  ],
+  "verification_status": "PARTIALLY_VERIFIED",
+  "verified_at": "2026-09-25"
 }

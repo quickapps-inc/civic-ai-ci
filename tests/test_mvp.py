@@ -119,17 +119,41 @@ def test_requete_vide_invalide():
 
 
 def test_donnees_non_verifiees_ne_deviennent_pas_verified():
-    """Garantie UNKNOWN > FAUX : aucune fiche locale ne doit être VERIFIED
-    par défaut et /api/search ne doit jamais promouvoir artificiellement."""
+    """Garantie UNKNOWN > FAUX (CIVIC-DATA-001, adaptée le 2026-09-25) :
+    avant la mission, toutes les fiches étaient UNVERIFIED avec champs nuls.
+    Depuis l'intégration du seed vérifié, l'invariant exigible est PLUS STRICT :
+    aucune procédure/variante VERIFIED ou PARTIALLY_VERIFIED ne doit exister
+    sans sources officielles (URL + verified_at 2026-09-25), et /api/search
+    ne doit jamais promouvoir artificiellement un statut.
+    Voir docs/DATA_PROVENANCE.md et le rapport de mission pour la justification.
+    """
     res = client.get("/api/procedures")
     assert res.status_code == 200
     for proc in res.json():
-        assert proc["verification_status"] == "UNVERIFIED"
-        assert proc["cost"] is None
-        assert proc["delay"] is None
-        assert proc["competent_authority"] is None
-        assert proc["requirements"] == []
-        assert proc["sources"] == []
+        assert proc["verification_status"] in (
+            "VERIFIED",
+            "PARTIALLY_VERIFIED",
+            "UNVERIFIED",
+        )
+        assert "score" not in proc  # aucun score numérique arbitraire
+        if proc["verification_status"] in ("VERIFIED", "PARTIALLY_VERIFIED"):
+            assert isinstance(proc["sources"], list) and len(proc["sources"]) > 0
+            for source in proc["sources"]:
+                assert source["url"]
+                assert source["verified_at"] == "2026-09-25"
+        for variant in proc.get("variants", []):
+            assert variant["verification_status"] in (
+                "VERIFIED",
+                "PARTIALLY_VERIFIED",
+                "UNVERIFIED",
+            )
+            assert "score" not in variant
+            if variant["verification_status"] in ("VERIFIED", "PARTIALLY_VERIFIED"):
+                assert isinstance(variant["sources"], list) and len(variant["sources"]) > 0
+                for source in variant["sources"]:
+                    assert source["url"]
+                    assert source["verified_at"] == "2026-09-25"
     search = client.post("/api/search", json={"query": "J'ai perdu ma CNI"})
-    assert search.json()["verification_status"] == "UNVERIFIED"
-    assert search.json()["procedure"]["verification_status"] == "UNVERIFIED"
+    body = search.json()
+    # Le statut retourné reflète la fiche/variante, sans promotion artificielle.
+    assert body["verification_status"] == body["variant"]["verification_status"]

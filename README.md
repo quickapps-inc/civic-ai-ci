@@ -1,4 +1,4 @@
-# CIVIC-AI CI — MVP CIVIC-MVP-001
+# CIVIC-AI CI — MVP CIVIC-MVP-001 + seed vérifié CIVIC-DATA-001
 
 Candidat au concours **SPRINT DIGITAL 2026** (Côte d'Ivoire),
 rubrique **« Accès à l'information et orientation des usagers »**.
@@ -29,11 +29,15 @@ Aucun LLM externe, aucune clé API, fonctionnement 100 % local.
   `null`, `[]` ou `UNVERIFIED`.
 - Aucun coût, délai, document, adresse, téléphone, URL, texte juridique
   ou autorité n'est fabriqué pour « remplir » les fiches.
-- Les 5 fiches du MVP sont volontairement `UNVERIFIED` : elles servent
-  à tester le moteur. La collecte/validation réelle fera l'objet
-  d'une mission distincte.
-- Statuts possibles : `VERIFIED`, `PARTIALLY_VERIFIED`, `UNVERIFIED`.
+- CIVIC-MVP-001 : les 5 fiches étaient volontairement `UNVERIFIED`.
+- CIVIC-DATA-001 (seed vérifié le 2026-09-25) : seules les données
+  fournies dans la mission sont intégrées, chacune avec sa provenance
+  (titre, organisme, URL, `verified_at`). Tout le reste reste `null`/vide.
+- Statuts possibles : `VERIFIED`, `PARTIALLY_VERIFIED`, `UNVERIFIED`
+  (affichés « Information vérifiée » / « partiellement vérifiée » /
+  « non encore vérifiée », jamais masqués).
 - Pas de score de confiance numérique arbitraire.
+- Détail : voir `docs/DATA_PROVENANCE.md`.
 
 ## Architecture
 
@@ -41,19 +45,29 @@ Aucun LLM externe, aucune clé API, fonctionnement 100 % local.
 civic_ai_ci/
   app/
     main.py            # FastAPI : montage routes + statiques + page /
-    api/routes.py      # GET /health, /api/procedures, POST /api/search
+    api/routes.py      # GET /health, /api/procedures, POST /api/search (+ variante)
     core/normalize.py  # minuscules, sans accents, ponctuation aplanie
-    core/intents.py    # moteur déterministe par sous-chaînes (sans LLM)
-    schemas/models.py  # Pydantic : Procedure, SearchRequest/Response
+    core/intents.py    # moteur déterministe par sous-chaînes + variantes (sans LLM)
+    schemas/models.py  # Pydantic : Source, ProcedureVariant, Procedure, Search*
     services/procedures.py  # chargement JSON locaux (cache lru)
   knowledge/
-    procedures/*.json  # 5 fiches UNVERIFIED versionnées
-    intents/intents.json  # motifs de référence (doc du moteur)
+    procedures/*.json  # 5 fiches vérifiées versionnées (variantes + sources)
+    intents/intents.json  # motifs de référence + signaux de variantes
+  docs/DATA_PROVENANCE.md  # principe, statuts, provenance, contradictions
   static/css/style.css
   static/js/app.js     # fetch réel vers /api/search, rien en dur
   templates/index.html
-  tests/test_mvp.py
+  tests/test_mvp.py            # 14 tests d'origine (1 adapté, voir ci-dessous)
+  tests/test_civic_data_001.py # 19 tests CIVIC-DATA-001
 ```
+
+Modèle de connaissance (CIVIC-DATA-001, rétrocompatible) :
+`Procedure { id, slug, name, summary, [requirements, cost, delay,
+competent_authority génériques], notes, variants[], sources[],
+verification_status, verified_at }`, chaque variante portant
+`{ id, name, requirements, cost, delay, competent_authority, notes,
+sources, verification_status, verified_at }`. Les sources sont des objets
+`{ title, organization, url, verified_at }`.
 
 ## Installation
 
@@ -99,7 +113,7 @@ Invoke-RestMethod -Method Post -Uri http://127.0.0.1:8000/api/search `
   -ContentType "application/json" -Body '{"query": "J''ai perdu ma CNI"}'
 ```
 
-Réponse (abrégée) :
+Réponse (abrégée, CIVIC-DATA-001) :
 
 ```json
 {
@@ -107,26 +121,49 @@ Réponse (abrégée) :
   "normalized_query": "j ai perdu ma cni",
   "intent": "cni",
   "match_status": "MATCHED",
-  "procedure": { "slug": "cni", "verification_status": "UNVERIFIED", "...": "..." },
-  "verification_status": "UNVERIFIED",
-  "message": "Démarche identifiée : ..."
+  "procedure": { "slug": "cni", "verification_status": "PARTIALLY_VERIFIED", "...": "..." },
+  "variant": { "id": "duplicata-perte", "verification_status": "VERIFIED", "...": "..." },
+  "needs_clarification": false,
+  "verification_status": "VERIFIED",
+  "message": "Démarche identifiée : ... — variante : Duplicata / perte."
 }
 ```
 
-Une requête inconnue retourne `intent: "UNKNOWN"`, `procedure: null`,
-sans hallucination.
+L'`intent` reste le slug de la procédure (compatibilité) ; la variante
+est retournée séparément. Une demande CNI générique (« je veux une CNI »)
+retourne `variant: null`, `needs_clarification: true`,
+`match_status: "NEEDS_CLARIFICATION"` et demande une précision au lieu
+de choisir arbitrairement. Une requête inconnue retourne
+`intent: "UNKNOWN"`, `procedure: null`, sans hallucination.
 
-## État actuel du MVP
+## État actuel
 
-- [x] 5 fiches locales `UNVERIFIED` (CNI, passeport, extrait de naissance,
-  certificat de nationalité, casier judiciaire)
-- [x] Moteur déterministe insensible casse/accents, UNKNOWN propre
-- [x] API minimale + validation Pydantic (query 1–500 caractères)
-- [x] Page responsive branchée sur l'API réelle + exemples cliquables
-- [x] 14 tests pytest
-- [ ] Données administratives réelles (mission de collecte distincte)
+- [x] MVP CIVIC-MVP-001 (moteur, API, page, 14 tests)
+- [x] CIVIC-DATA-001 : modèle à variantes + seed vérifié le 2026-09-25 :
+  CNI (première demande / renouvellement / duplicata-perte),
+  extrait de naissance (copie d'extrait égaré), passeport
+  (40 000 FCFA, délai conditionné PAF), certificat de nationalité
+  (2 500 + 500 timbre, 24 h), casier Bulletin n°3 (2 500 FCFA, 24 h)
+- [x] Moteur déterministe insensible casse/accents, UNKNOWN propre,
+  variantes CNI/extrait, CNI générique → clarification (jamais arbitraire)
+- [x] API minimale + validation Pydantic (query 1–500 caractères),
+  endpoints existants inchangés + champs `variant` / `needs_clarification`
+- [x] Page responsive branchée sur l'API réelle + exemples cliquables,
+  statuts en français, sources cliquables, inconnus affichés honnêtement
+- [x] 33 tests pytest (14 d'origine dont 1 adapté au seed vérifié
+  — voir « Limites / adaptation » — + 19 CIVIC-DATA-001)
 - [ ] Recherche floue / synonymes étendus, multi-intentions
 - [ ] Persistance base de données, back-office de validation
+
+## Limites / adaptation
+
+- Le test `test_donnees_non_verifiees_ne_deviennent_pas_verified` datait du
+  MVP (toutes fiches `UNVERIFIED`, champs nuls). Avec le seed vérifié, son
+  corps a été adapté vers un invariant plus strict : aucune procédure /
+  variante `VERIFIED` ou `PARTIALLY_VERIFIED` sans sources officielles
+  (URL + `verified_at` 2026-09-25), aucun score numérique, aucun statut
+  promu artificiellement. Nom conservé, justification dans
+  `docs/DATA_PROVENANCE.md`. Aucun autre test supprimé ou affaibli.
 
 ## Limites connues
 

@@ -2,12 +2,124 @@
   "id": "cni",
   "slug": "cni",
   "name": "Carte Nationale d'Identité (CNI)",
-  "summary": "Fiche en cours de constitution. Les informations administratives officielles (documents requis, coût, délai, autorité compétente) ne sont pas encore vérifiées.",
+  "summary": "La CNI comporte plusieurs variantes administratives : première demande, renouvellement, duplicata en cas de perte. Validité de la CNI : 10 ans. Précisez votre situation pour obtenir les pièces correspondant à votre cas.",
   "requirements": [],
   "cost": null,
   "delay": null,
   "competent_authority": null,
-  "sources": [],
-  "verification_status": "UNVERIFIED",
-  "verified_at": null
+  "notes": "Aucun coût, délai ou autorité unique n'est encodé au niveau générique : l'information varie selon la variante. Validité CNI : 10 ans (source ONECI). Le délai de fabrication dépend du lieu et de la période (aucun délai fixe encodé).",
+  "variants": [
+    {
+      "id": "premiere-demande",
+      "name": "Première demande",
+      "requirements": [
+        "Copie intégrale ou extrait d'acte de naissance, ou acte de notoriété portant la mention appropriée, datant de moins de 2 ans (cas général d'une personne née en Côte d'Ivoire)",
+        "Certificat de nationalité datant de moins de 2 ans",
+        "Reçu d'enrôlement"
+      ],
+      "cost": "5 000 FCFA",
+      "delay": null,
+      "competent_authority": "ONECI — Office National de l'État Civil et de l'Identification",
+      "notes": "Des pièces supplémentaires peuvent être nécessaires selon la situation personnelle (mariage, naturalisation, profession réglementée, etc.) — non généralisées ici. Validité de la CNI : 10 ans. Délai de fabrication : dépend du lieu et de la période (aucun nombre fixe encodé).",
+      "sources": [
+        {
+          "title": "Carte d'identité — documents à fournir (ONECI)",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://www.oneci.ci/nos-produits/carte-identite/documents-a-fournir",
+          "verified_at": "2026-09-25"
+        },
+        {
+          "title": "Documents requis — timbre ONECI",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://timbre.oneci.ci/required-documents",
+          "verified_at": "2026-09-25"
+        }
+      ],
+      "verification_status": "VERIFIED",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "id": "renouvellement",
+      "name": "Renouvellement",
+      "requirements": [
+        "CNI à renouveler, ou photocopie, ou fiche d'identité ONECI, ou document comportant le numéro de la CNI",
+        "Justificatif de profession lorsque requis",
+        "Certificat de nationalité de moins de 2 ans",
+        "Copie intégrale ou extrait de naissance original de moins de 2 ans",
+        "Reçu d'enrôlement"
+      ],
+      "cost": null,
+      "delay": null,
+      "competent_authority": "ONECI — Office National de l'État Civil et de l'Identification",
+      "notes": "Liste confirmée par la source ONECI pour le renouvellement. Coût et délai non fournis dans cette mission : non vérifiés, donc non encodés.",
+      "sources": [
+        {
+          "title": "Carte d'identité — documents à fournir (ONECI)",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://www.oneci.ci/nos-produits/carte-identite/documents-a-fournir",
+          "verified_at": "2026-09-25"
+        },
+        {
+          "title": "Documents requis — timbre ONECI",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://timbre.oneci.ci/required-documents",
+          "verified_at": "2026-09-25"
+        }
+      ],
+      "verification_status": "VERIFIED",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "id": "duplicata-perte",
+      "name": "Duplicata / perte",
+      "requirements": [
+        "Attestation de déclaration de perte",
+        "Copie recto-verso de la CNI égarée, OU fiche d'identité ONECI, OU document portant le numéro NNI",
+        "Copie intégrale ou extrait d'acte de naissance",
+        "Reçu d'enrôlement"
+      ],
+      "cost": null,
+      "delay": null,
+      "competent_authority": "ONECI — Office National de l'État Civil et de l'Identification",
+      "notes": "Variante distincte de la première demande : ne pas fusionner. Coût et délai non fournis dans cette mission : non vérifiés, donc non encodés.",
+      "sources": [
+        {
+          "title": "Carte d'identité — documents à fournir (ONECI)",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://www.oneci.ci/nos-produits/carte-identite/documents-a-fournir",
+          "verified_at": "2026-09-25"
+        },
+        {
+          "title": "Aide — timbre ONECI",
+          "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+          "url": "https://timbre.oneci.ci/help",
+          "verified_at": "2026-09-25"
+        }
+      ],
+      "verification_status": "VERIFIED",
+      "verified_at": "2026-09-25"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Carte d'identité — documents à fournir (ONECI)",
+      "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+      "url": "https://www.oneci.ci/nos-produits/carte-identite/documents-a-fournir",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "title": "Documents requis — timbre ONECI",
+      "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+      "url": "https://timbre.oneci.ci/required-documents",
+      "verified_at": "2026-09-25"
+    },
+    {
+      "title": "Aide — timbre ONECI",
+      "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+      "url": "https://timbre.oneci.ci/help",
+      "verified_at": "2026-09-25"
+    }
+  ],
+  "verification_status": "PARTIALLY_VERIFIED",
+  "verified_at": "2026-09-25"
 }

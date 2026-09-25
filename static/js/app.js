@@ -12,19 +12,73 @@
   var details = document.getElementById("result-details");
   var sources = document.getElementById("result-sources");
 
+  var STATUS_LABELS = {
+    VERIFIED: "Information vérifiée",
+    PARTIALLY_VERIFIED: "Information partiellement vérifiée",
+    UNVERIFIED: "Information non encore vérifiée"
+  };
+  var UNKNOWN_TEXT = "Information non disponible / non vérifiée";
+
   function showError(text) {
     errorBox.textContent = text;
     errorBox.hidden = !text;
   }
 
-  function valueOrUnknown(value) {
-    if (value === null || value === undefined || value === "") {
-      return '<span class="unknown-text">Non vérifié</span>';
-    }
+  function escapeHtml(value) {
     return String(value)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function valueOrUnknown(value) {
+    if (value === null || value === undefined || value === "") {
+      return '<span class="unknown-text">' + UNKNOWN_TEXT + "</span>";
+    }
+    return escapeHtml(value);
+  }
+
+  function statusLabel(status) {
+    return STATUS_LABELS[status] || status || UNKNOWN_TEXT;
+  }
+
+  function badgeClass(status) {
+    if (status === "VERIFIED") return "badge verified";
+    if (status === "PARTIALLY_VERIFIED") return "badge partial";
+    return "badge unknown";
+  }
+
+  function renderSources(list) {
+    if (!Array.isArray(list) || !list.length) {
+      sources.textContent = "Aucune source vérifiée pour le moment.";
+      return;
+    }
+    sources.innerHTML = "";
+    var ul = document.createElement("ul");
+    ul.className = "sources-list";
+    list.forEach(function (s) {
+      var li = document.createElement("li");
+      if (s && typeof s === "object" && s.url) {
+        var a = document.createElement("a");
+        a.href = s.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = s.title || s.url;
+        li.appendChild(a);
+        var meta = [];
+        if (s.organization) meta.push(s.organization);
+        if (s.verified_at) meta.push("vérifié le " + s.verified_at);
+        if (meta.length) {
+          li.appendChild(document.createTextNode(" — " + meta.join(" — ")));
+        }
+      } else {
+        li.textContent = String(s);
+      }
+      ul.appendChild(li);
+    });
+    sources.innerHTML = "";
+    sources.appendChild(ul);
   }
 
   function render(data) {
@@ -35,31 +89,53 @@
       badge.className = "badge unknown";
       message.textContent = data.message;
       details.innerHTML = "";
-      sources.textContent = "Aucune source disponible pour cette demande.";
+      renderSources([]);
       return;
     }
     var p = data.procedure;
+    var v = data.variant || null;
+    // La fiche affichée : la variante si connue, sinon la procédure générique.
+    var shown = v || p;
+    var effectiveStatus = data.verification_status || p.verification_status;
+
     title.textContent = p.name;
-    badge.textContent = p.verification_status;
-    badge.className = "badge " + (p.verification_status === "VERIFIED" ? "verified" : "unknown");
+    badge.textContent = statusLabel(effectiveStatus);
+    badge.className = badgeClass(effectiveStatus);
     message.textContent = data.message;
 
-    var docs = Array.isArray(p.requirements) && p.requirements.length
-      ? p.requirements.map(function (d) {
-          return "<li>" + valueOrUnknown(d) + "</li>";
+    var variantRow;
+    if (v) {
+      variantRow = escapeHtml(v.name);
+    } else if (data.needs_clarification) {
+      variantRow = '<span class="unknown-text">À préciser — aucune variante choisie arbitrairement. Voir message ci-dessus.</span>';
+    } else if (Array.isArray(p.variants) && p.variants.length) {
+      variantRow = '<span class="unknown-text">Fiche générique — précisez votre situation pour afficher une variante.</span>';
+    } else {
+      variantRow = '<span class="unknown-text">Sans objet (pas de variante pour cette démarche).</span>';
+    }
+
+    var docs = Array.isArray(shown.requirements) && shown.requirements.length
+      ? shown.requirements.map(function (d) {
+          return "<li>" + escapeHtml(d) + "</li>";
         }).join("")
-      : '<span class="unknown-text">Non vérifié — aucune liste officielle renseignée.</span>';
+      : '<span class="unknown-text">' + UNKNOWN_TEXT + " — aucune liste officielle renseignée.</span>";
+
+    var verifiedAt = shown.verified_at || p.verified_at;
 
     details.innerHTML =
+      "<dt>Procédure</dt><dd>" + escapeHtml(p.name) + "</dd>" +
+      "<dt>Variante</dt><dd>" + variantRow + "</dd>" +
       "<dt>Résumé</dt><dd>" + valueOrUnknown(p.summary) + "</dd>" +
-      "<dt>Documents requis</dt><dd><ul>" + docs + "</ul></dd>" +
-      "<dt>Coût</dt><dd>" + valueOrUnknown(p.cost) + "</dd>" +
-      "<dt>Délai</dt><dd>" + valueOrUnknown(p.delay) + "</dd>" +
-      "<dt>Autorité compétente</dt><dd>" + valueOrUnknown(p.competent_authority) + "</dd>";
+      (v && v.notes ? "<dt>Note (variante)</dt><dd>" + escapeHtml(v.notes) + "</dd>" : "") +
+      (!v && p.notes ? "<dt>Note</dt><dd>" + escapeHtml(p.notes) + "</dd>" : "") +
+      "<dt>Documents / informations requis</dt><dd><ul>" + docs + "</ul></dd>" +
+      "<dt>Coût</dt><dd>" + valueOrUnknown(shown.cost) + "</dd>" +
+      "<dt>Délai</dt><dd>" + valueOrUnknown(shown.delay) + "</dd>" +
+      "<dt>Autorité compétente</dt><dd>" + valueOrUnknown(shown.competent_authority) + "</dd>" +
+      "<dt>Statut de vérification</dt><dd>" + escapeHtml(statusLabel(effectiveStatus)) + " (" + escapeHtml(effectiveStatus || "?") + ")</dd>" +
+      "<dt>Date de vérification</dt><dd>" + valueOrUnknown(verifiedAt) + "</dd>";
 
-    sources.textContent = Array.isArray(p.sources) && p.sources.length
-      ? p.sources.join(", ")
-      : "Aucune source vérifiée pour le moment.";
+    renderSources(v && v.sources && v.sources.length ? v.sources : p.sources);
   }
 
   async function search(query) {

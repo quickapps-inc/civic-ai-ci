@@ -1,5 +1,5 @@
 {
-  "comment": "Motifs de référence du moteur d'intention déterministe. Les motifs sont exprimés sous forme normalisée (minuscules, sans accents). Le moteur Python applique la même normalisation à la requête avant comparaison par sous-chaîne. Aucun LLM, aucune donnée administrative factuelle ici.",
+  "comment": "Motifs de référence du moteur d'intention déterministe. Les motifs sont exprimés sous forme normalisée (minuscules, sans accents). Le moteur Python applique la même normalisation à la requête avant comparaison par sous-chaîne. Aucun LLM, aucune donnée administrative factuelle ici. L'intent reste le slug de la procédure ; la variante est résolue séparément (resolve_variant) sans choix arbitraire pour les demandes génériques.",
   "intents": [
     {
       "slug": "cni",
@@ -10,7 +10,13 @@
         "carte identite",
         "perdu ma carte",
         "renouveler ma carte"
-      ]
+      ],
+      "variants": {
+        "duplicata-perte": ["duplicata", "perdu", "perte", "egare", "vole"],
+        "renouvellement": ["renouvel", "expir"],
+        "premiere-demande": ["premier", "premiere", "1er", "1ere"],
+        "generic_sans_variante": "aucun signal -> variant null + needs_clarification true (ex. 'je veux une CNI')"
+      }
     },
     {
       "slug": "passeport",
@@ -26,7 +32,11 @@
         "extrait de naissance",
         "acte de naissance",
         "document de naissance"
-      ]
+      ],
+      "variants": {
+        "copie-extrait-egare": ["perdu", "perte", "egare", "detruit", "vole"],
+        "generic_sans_variante": "sans signal de perte -> variant null, fiche générique retournée (ex. 'J'ai besoin de mon extrait de naissance')"
+      }
     },
     {
       "slug": "certificat-nationalite",

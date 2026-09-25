@@ -2,12 +2,26 @@
   "id": "casier-judiciaire",
   "slug": "casier-judiciaire",
   "name": "Casier judiciaire",
-  "summary": "Fiche en cours de constitution. Les informations administratives officielles (documents requis, coût, délai, autorité compétente) ne sont pas encore vérifiées.",
-  "requirements": [],
-  "cost": null,
-  "delay": null,
-  "competent_authority": null,
-  "sources": [],
-  "verification_status": "UNVERIFIED",
-  "verified_at": null
+  "summary": "Demander un extrait de casier judiciaire — Bulletin n°3.",
+  "requirements": [
+    "Original de l'extrait de naissance",
+    "Situation matrimoniale",
+    "Profession",
+    "Ville d'habitation"
+  ],
+  "cost": "2 500 FCFA",
+  "delay": "24 heures",
+  "competent_authority": "Service des casiers judiciaires et certificats de nationalité",
+  "notes": "Pièces/informations indiquées par la source pour le Bulletin n°3.",
+  "variants": [],
+  "sources": [
+    {
+      "title": "Extrait de casier judiciaire (Bulletin n°3) — Service Public",
+      "organization": "Portail officiel de l'Administration ivoirienne — Service Public",
+      "url": "https://servicepublic.gouv.ci/accueil/detaildemarcheparticulier/1/81/61",
+      "verified_at": "2026-09-25"
+    }
+  ],
+  "verification_status": "VERIFIED",
+  "verified_at": "2026-09-25"
 }
