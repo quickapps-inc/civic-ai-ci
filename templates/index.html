@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CIVIC-AI CI — Orientation administrative</title>
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>CIVIC-AI CI</h1>
+      <p class="tagline">Exprimez votre besoin administratif en langage simple : nous identifions la démarche correspondante, sans jamais inventer d'information officielle.</p>
+      <p class="principle">Principe : <strong>UNKNOWN &gt; FAUX</strong> — une information non vérifiée reste affichée comme non vérifiée.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="search-card" aria-label="Recherche de démarche">
+      <label for="query">Votre besoin administratif</label>
+      <div class="search-row">
+        <input id="query" type="text" maxlength="500" placeholder="Ex : J'ai perdu ma CNI" autocomplete="off" />
+        <button id="search-btn" type="button">Rechercher</button>
+      </div>
+      <div class="examples">
+        <span>Exemples :</span>
+        <button type="button" class="example" data-query="J'ai perdu ma CNI">J'ai perdu ma CNI</button>
+        <button type="button" class="example" data-query="Je veux obtenir un passeport">Je veux obtenir un passeport</button>
+        <button type="button" class="example" data-query="J'ai besoin d'un casier judiciaire">J'ai besoin d'un casier judiciaire</button>
+      </div>
+      <p id="error" class="error" role="alert" hidden></p>
+    </section>
+
+    <section id="result" class="result-card" aria-live="polite" hidden>
+      <h2 id="result-title"></h2>
+      <p><span id="badge" class="badge"></span></p>
+      <p id="result-message"></p>
+      <dl id="result-details" class="details"></dl>
+      <div id="result-sources-block">
+        <h3>Sources</h3>
+        <p id="result-sources"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>MVP CIVIC-MVP-001 — moteur déterministe local, aucune IA générative, aucune donnée officielle inventée.</p>
+    </div>
+  </footer>
+
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

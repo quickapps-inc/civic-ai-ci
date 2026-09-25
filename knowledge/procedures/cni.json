@@ -1,0 +1,13 @@
+{
+  "id": "cni",
+  "slug": "cni",
+  "name": "Carte Nationale d'Identité (CNI)",
+  "summary": "Fiche en cours de constitution. Les informations administratives officielles (documents requis, coût, délai, autorité compétente) ne sont pas encore vérifiées.",
+  "requirements": [],
+  "cost": null,
+  "delay": null,
+  "competent_authority": null,
+  "sources": [],
+  "verification_status": "UNVERIFIED",
+  "verified_at": null
+}

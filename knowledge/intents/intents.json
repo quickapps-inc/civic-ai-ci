@@ -1,0 +1,48 @@
+{
+  "comment": "Motifs de référence du moteur d'intention déterministe. Les motifs sont exprimés sous forme normalisée (minuscules, sans accents). Le moteur Python applique la même normalisation à la requête avant comparaison par sous-chaîne. Aucun LLM, aucune donnée administrative factuelle ici.",
+  "intents": [
+    {
+      "slug": "cni",
+      "patterns": [
+        "cni",
+        "carte nationale d'identite",
+        "carte d'identite",
+        "carte identite",
+        "perdu ma carte",
+        "renouveler ma carte"
+      ]
+    },
+    {
+      "slug": "passeport",
+      "patterns": [
+        "passeport",
+        "voyager",
+        "voyage a l'etranger"
+      ]
+    },
+    {
+      "slug": "extrait-naissance",
+      "patterns": [
+        "extrait de naissance",
+        "acte de naissance",
+        "document de naissance"
+      ]
+    },
+    {
+      "slug": "certificat-nationalite",
+      "patterns": [
+        "certificat de nationalite",
+        "prouver ma nationalite"
+      ]
+    },
+    {
+      "slug": "casier-judiciaire",
+      "patterns": [
+        "casier judiciaire",
+        "bulletin numero 3",
+        "bulletin n 3"
+      ]
+    }
+  ],
+  "unknown_label": "UNKNOWN"
+}
