@@ -121,5 +121,39 @@
     }
   ],
   "verification_status": "PARTIALLY_VERIFIED",
-  "verified_at": "2026-09-25"
+  "verified_at": "2026-09-25",
+  "practical_info": {
+    "organization": "Office National de l'État Civil et de l'Identification (ONECI)",
+    "address": null,
+    "phones": ["1340"],
+    "email": null,
+    "hours": "08h00–12h00 / 13h00–17h00",
+    "opening_days": null,
+    "accessibility": null,
+    "website_url": "https://www.oneci.ci/contacts",
+    "sources": [
+      {
+        "title": "Contacts — ONECI",
+        "organization": "ONECI — Office National de l'État Civil et de l'Identification",
+        "url": "https://www.oneci.ci/contacts",
+        "verified_at": "2026-09-26"
+      }
+    ],
+    "verified_at": "2026-09-26"
+  },
+  "tracking": {
+    "available": true,
+    "label": "Suivre ma demande",
+    "mode": "external_official",
+    "url": "https://statut.oneci.ci/",
+    "organization": "ONECI",
+    "description": "CIVIC-AI peut vous orienter vers le service officiel de suivi lorsqu'il est disponible.",
+    "source": {
+      "title": "Consultation de l'état d'une demande de titre d'identité",
+      "organization": "ONECI",
+      "url": "https://statut.oneci.ci/",
+      "verified_at": "2026-09-26"
+    },
+    "verified_at": "2026-09-26"
+  }
 }

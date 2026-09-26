@@ -1,7 +1,7 @@
-"""Schémas Pydantic — CIVIC-AI CI (CIVIC-DATA-001 : procédures + variantes)."""
+"""Schémas Pydantic — CIVIC-AI CI (CIVIC-VISION-001 : infos pratiques + suivi)."""
 
 from enum import Enum
-from typing import Optional
+from typing import Literal, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -40,6 +40,57 @@ class ProcedureVariant(BaseModel):
     verified_at: Optional[str] = None
 
 
+class PracticalInfo(BaseModel):
+    """Informations pratiques sourcées sur l'organisme concerné.
+
+    Tous les champs sont optionnels (UNKNOWN > FAUX) : un champ inconnu
+    reste null/absent. Ne jamais déduire les jours d'ouverture à partir
+    des horaires, ne jamais inventer l'accessibilité PMR.
+    """
+
+    organization: Optional[str] = None
+    address: Optional[str] = None
+    phones: Optional[list[str]] = None
+    email: Optional[str] = None
+    hours: Optional[str] = None
+    opening_days: Optional[list[str]] = None
+    accessibility: Optional[str] = None
+    website_url: Optional[str] = None
+    sources: list[Source] = Field(default_factory=list)
+    verified_at: Optional[str] = None
+
+
+class TrackingInfo(BaseModel):
+    """Orientation vers un service officiel de suivi externe.
+
+    Modes futurs : « external_official » (prototype actuel, simple lien
+    sortant vers le service officiel) et « api_integrated » (intégration
+    API gouvernementale — NON implémentée). Aucun statut administratif
+    réel n'est simulé : ce modèle ne porte que la capacité d'orientation.
+    """
+
+    available: bool = False
+    label: Optional[str] = None
+    mode: Literal["external_official", "api_integrated"] = "external_official"
+    url: Optional[str] = None
+    organization: Optional[str] = None
+    description: Optional[str] = None
+    source: Optional[Source] = None
+    verified_at: Optional[str] = None
+
+    @field_validator("url")
+    @classmethod
+    def url_must_be_http_if_set(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        text = value.strip()
+        if not text:
+            return None
+        if not (text.startswith("http://") or text.startswith("https://")):
+            raise ValueError("tracking.url doit être une URL http(s) vérifiée ou null")
+        return text
+
+
 class Procedure(BaseModel):
     id: str
     slug: str
@@ -57,6 +108,9 @@ class Procedure(BaseModel):
     sources: list[Source] = Field(default_factory=list)
     verification_status: VerificationStatus = VerificationStatus.UNVERIFIED
     verified_at: Optional[str] = None
+    # CIVIC-VISION-001 : extensions optionnelles, absentes des JSON existants.
+    practical_info: Optional[PracticalInfo] = None
+    tracking: Optional[TrackingInfo] = None
 
 
 class SearchRequest(BaseModel):

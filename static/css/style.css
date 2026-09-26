@@ -177,6 +177,8 @@ body {
 .example:focus-visible,
 .variant-choice:focus-visible,
 .source-link:focus-visible,
+.track-link:focus-visible,
+.practical-link:focus-visible,
 .skip-link:focus-visible {
   outline: 3px solid var(--orange);
   outline-offset: 2px;
@@ -385,6 +387,51 @@ body {
 
 .source-link:hover { background: var(--blue-dark); }
 
+/* ---------- Informations pratiques + suivi (CIVIC-VISION-001) ---------- */
+
+.practical-block p { margin: 4px 0; }
+.practical-org { font-size: 1.02rem; }
+
+.practical-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--blue);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tracking-block p { margin: 6px 0; }
+
+.track-link {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 11px 20px;
+  border-radius: 10px;
+  background: var(--green);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  text-decoration: none;
+  min-height: 44px;
+}
+
+.track-link:hover { background: #125e38; }
+
+.track-pending {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 14px;
+  font-weight: 800;
+  font-size: 0.92rem;
+  color: #7a4a00;
+  background: var(--orange-soft);
+  border: 1px solid #f0cf9e;
+  border-radius: 999px;
+}
+
+.track-note { color: var(--muted); font-size: 0.92rem; }
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -413,4 +460,5 @@ body {
   .example { font-size: 0.88rem; }
   .trust-status { font-size: 0.9rem; }
   .source-link { display: block; text-align: center; }
+  .track-link { display: block; text-align: center; }
 }

@@ -172,6 +172,60 @@
     return html;
   }
 
+  function renderPracticalInfo(info) {
+    if (!info) return "";
+    var rows = [];
+    if (info.organization) {
+      rows.push('<p class="practical-org"><strong>' + escapeHtml(info.organization) + "</strong></p>");
+    }
+    var phones = Array.isArray(info.phones) ? info.phones.filter(Boolean) : [];
+    if (phones.length) {
+      rows.push("<p>Centre d\u2019appel : <strong>" + escapeHtml(phones.join(", ")) + "</strong></p>");
+    }
+    if (info.hours) {
+      rows.push("<p>Horaires : " + escapeHtml(info.hours) + "</p>");
+    }
+    if (info.address) {
+      rows.push("<p>Adresse : " + escapeHtml(info.address) + "</p>");
+    }
+    if (info.email) {
+      rows.push("<p>Email : " + escapeHtml(info.email) + "</p>");
+    }
+    // Jours d'ouverture et accessibilité : affichés uniquement si explicitement renseignés.
+    if (Array.isArray(info.opening_days) && info.opening_days.filter(Boolean).length) {
+      rows.push("<p>Jours d\u2019ouverture : " + escapeHtml(info.opening_days.filter(Boolean).join(", ")) + "</p>");
+    }
+    if (info.accessibility) {
+      rows.push("<p>Accessibilit\u00e9 : " + escapeHtml(info.accessibility) + "</p>");
+    }
+    if (info.website_url) {
+      rows.push('<p><a class="practical-link" href="' + escapeHtml(info.website_url) + '" target="_blank" rel="noopener noreferrer">Site officiel de l\u2019organisme</a></p>');
+    }
+    if (!rows.length) return "";
+    var html = '<div class="journey-block practical-block"><h3>Informations pratiques</h3>' + rows.join("");
+    var date = formatVerifiedDate(info.verified_at);
+    if (date) html += '<p class="source-date">' + escapeHtml(date) + "</p>";
+    html += "</div>";
+    return html;
+  }
+
+  function renderTracking(tracking) {
+    if (!tracking || tracking.available !== true) return "";
+    var label = tracking.label || "Suivre ma demande";
+    var html = '<div class="journey-block tracking-block"><h3>Et apr\u00e8s ?</h3>';
+    var description = tracking.description ||
+      "CIVIC-AI peut vous orienter vers le service officiel de suivi lorsqu\u2019il est disponible.";
+    html += "<p>" + escapeHtml(description) + "</p>";
+    if (tracking.url) {
+      html += '<p><a class="track-link" href="' + escapeHtml(tracking.url) + '" target="_blank" rel="noopener noreferrer">' + escapeHtml(label) + "</a></p>";
+    } else {
+      html += '<p class="track-pending">Suivi officiel disponible \u2014 lien \u00e0 configurer</p>';
+      html += '<p class="track-note">L\u2019int\u00e9gration du lien officiel est en pr\u00e9paration. CIVIC-AI ne conna\u00eet pas l\u2019\u00e9tat de votre demande.</p>';
+    }
+    html += "</div>";
+    return html;
+  }
+
   function showResult(html) {
     result.hidden = false;
     resultBody.innerHTML = html;
@@ -206,6 +260,8 @@
       '<p>Choisissez la situation qui correspond à votre cas :</p>' +
       '<div class="variant-choices">' + (buttons || '<span class="unknown-text">Aucune variante proposée.</span>') + "</div></div>" +
       renderTrustStatus(data.verification_status || (p && p.verification_status)) +
+      renderPracticalInfo(p.practical_info) +
+      renderTracking(p.tracking) +
       renderSources(p.sources)
     );
     resultBody.querySelectorAll(".variant-choice").forEach(function (btn) {
@@ -244,6 +300,8 @@
     html += '<div class="journey-block"><h3>Coût</h3>' + renderSimpleValue(shown.cost, true) + "</div>";
     html += '<div class="journey-block"><h3>Délai</h3>' + renderSimpleValue(shown.delay, false) + "</div>";
     html += '<div class="journey-block"><h3>Où effectuer la démarche</h3>' + renderSimpleValue(shown.competent_authority, false) + "</div>";
+    html += renderPracticalInfo(p.practical_info);
+    html += renderTracking(p.tracking);
     html += firstCitizenNote(p.notes, v && v.notes);
     var sources = (v && v.sources && v.sources.length ? v.sources : p.sources);
     html += renderSources(sources);
