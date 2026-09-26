@@ -181,3 +181,41 @@ de choisir arbitrairement. Une requête inconnue retourne
 2. Workflow de vérification (`UNVERIFIED` → `PARTIALLY_VERIFIED` → `VERIFIED`).
 3. Enrichissement prudent du moteur (synonymes validés, journal des UNKNOWN).
 4. Durcissement : rate-limit, journalisation, pages d'erreur dédiées.
+
+## Déploiement Contabo / Docker (CIVIC-DEPLOY-001A)
+
+Architecture : un seul service `web` (FastAPI sur le port conteneur `8000`),
+rattaché au réseau externe existant `proxy-net` (alias `civic-ai-ci-web`).
+Aucun port hôte n'est publié : seul Caddy (ports 80/443) expose le trafic.
+
+Build / démarrage (depuis la racine du VPS après `git clone` / `git pull`) :
+
+```bash
+docker compose -f deploy/contabo/compose.yaml up -d --build
+```
+
+Statut :
+
+```bash
+docker compose -f deploy/contabo/compose.yaml ps
+```
+
+Logs :
+
+```bash
+docker compose -f deploy/contabo/compose.yaml logs -f web
+```
+
+Vérification santé (depuis le VPS, via le réseau `proxy-net` ou le conteneur) :
+
+```bash
+docker exec $(docker compose -f deploy/contabo/compose.yaml ps -q web) python -c "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read().decode())"
+# attendu : {"status": "ok", "service": "civic-ai-ci"}
+```
+
+Notes :
+- Le port `8000` est interne au conteneur et ne doit pas être publié
+  publiquement (`compose.yaml` ne publie aucun port hôte).
+- La configuration Caddy (reverse proxy) et DNS est effectuée séparément,
+  après validation du conteneur. Caddy joindra l'application via le DNS
+  Docker `http://civic-ai-ci-web:8000`.

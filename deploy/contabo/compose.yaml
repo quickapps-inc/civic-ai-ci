@@ -1,0 +1,16 @@
+name: civic-ai-ci
+
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    networks:
+      proxy-net:
+        aliases:
+          - civic-ai-ci-web
+
+networks:
+  proxy-net:
+    external: true
